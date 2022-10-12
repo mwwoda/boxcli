@@ -17,10 +17,20 @@ function getFixture(fixture) {
 		fixture += '.json';
 	}
 	/* eslint-disable no-sync */
-	return fs.readFileSync(
+	const content =  fs.readFileSync(
 		path.join(__dirname, '..', `fixtures/${fixture}`),
 		'utf8'
-	);
+	)
+
+	if (process.platform === 'win32') {
+		let transformedContent = fixture.endsWith('table.txt') ? 
+			content.replace(/(?<!-)(?<!\r\n)\r(?!\n\r)/g, '') :
+			content.replace(/\r/g, '')
+
+		return transformedContent.trimEnd().concat(os.EOL)
+	}
+
+	return content
 	/* eslint-enable no-sync */
 }
 
@@ -30,13 +40,13 @@ function getProgressBar(message) {
 
 function getBulkProgressBar(size) {
 	return getProgressBar(
-		`[----------------------------------------] 0% | 0/${size}[========================================] 100% | ${size}/${size}${os.EOL}`
+		`[----------------------------------------] 0% | 0/${size}[========================================] 100% | ${size}/${size}\n`
 	);
 }
 
 function getDownloadProgressBar(size) {
 	return getProgressBar(
-		`[----------------------------------------] 0% | ETA: 0s | 0/${size} | Speed: N/A MB/s[========================================] 100% | ETA: 0s | ${size}/${size} | Speed: N/A MB/s${os.EOL}`
+		`[----------------------------------------] 0% | ETA: 0s | 0/${size} | Speed: N/A MB/s[========================================] 100% | ETA: 0s | ${size}/${size} | Speed: N/A MB/s\n`
 	);
 }
 
