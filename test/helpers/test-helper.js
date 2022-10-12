@@ -23,9 +23,11 @@ function getFixture(fixture) {
 	)
 
 	if (process.platform === 'win32') {
+		/* eslint-disable require-unicode-regexp */
 		let transformedContent = fixture.endsWith('table.txt') ? 
 			content.replace(/(?<!-)(?<!\r\n)\r(?!\n\r)/g, '') :
 			content.replace(/\r/g, '')
+		/* eslint-disable require-unicode-regexp */
 
 		return transformedContent.trimEnd().concat(os.EOL)
 	}
