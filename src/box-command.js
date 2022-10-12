@@ -1154,7 +1154,7 @@ class BoxCommand extends Command {
 	 */
 	log(content) {
 		if (!this.flags.quiet) {
-			super.log(content);
+			process.stdout.write(`${content}${os.EOL}`)
 		}
 	}
 

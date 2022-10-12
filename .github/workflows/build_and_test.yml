@@ -9,9 +9,11 @@ on:
       - main
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
         node: ['12']
     name: Node ${{ matrix.node }}
     steps:
@@ -25,18 +27,3 @@ jobs:
         run: npm install
       - name: Build and test
         run: npm test
-      - name: Coveralls Parallel
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: run-node-${{ matrix.node }}
-          parallel: true
-  finish:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls Finished
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          parallel-finished: true
